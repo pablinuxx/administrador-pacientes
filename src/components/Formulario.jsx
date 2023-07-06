@@ -1,6 +1,6 @@
 import { useState } from "react";
-
-export const Formulario = () => {
+import Error from "./Error";
+export const Formulario = ({ pacientes, setPacientes }) => {
   const [nombre, setNombre] = useState("");
   const [propietario, setPropietario] = useState("");
   const [email, setEmail] = useState("");
@@ -15,7 +15,32 @@ export const Formulario = () => {
       seterror(true);
       return;
     }
+
+    const generarId = () => {
+      const random = Math.random().toString(36).substring(2);
+      const fecha = Date.now().toString(36);
+
+      return random + fecha;
+    };
     seterror(false);
+    //Constryo objeto
+    const objPaciente = {
+      nombre,
+      propietario,
+      email,
+      fecha,
+      sintomas,
+      id: generarId(),
+    };
+    //Añado un Paciente nuevo
+    setPacientes([...pacientes, objPaciente]);
+
+    //Reinicio el Formulario
+    setNombre("");
+    setPropietario("");
+    setFecha("");
+    setEmail("");
+    setSintomas("");
   };
 
   return (
@@ -30,9 +55,9 @@ export const Formulario = () => {
         className="bg-white shadow-md rounded-lg py-10 px-5 mb-10"
       >
         {error && (
-          <div className="bg-red-800 text-white  text-center p-3 uppercase font-bold mb-3 rounded-md">
-            <p>Todos los campos son obligatorios</p>
-          </div>
+          <Error>
+            <p> Todos los campos son obligatorios</p>
+          </Error>
         )}
         <div className="mb-5">
           <label
